@@ -1,0 +1,26 @@
+server:
+  port: 18086
+
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: "luxan-api-park"
+
+
+lewin:
+  luxan-ai-park:
+    scene-list:
+      - name: "南部厂餐厅"
+        camera-info-list:
+          - name: "first"
+            ip: 192.168.32.43
+            location: "东门：进"
+          - name: "for-test"
+            ip: 192.168.32.148
+            location: "海创"
+    cron-job-list:
+      - "* 0 10 * * ?"
+    stream-url-prefix: "http://192.168.32.253:8080/live?port=1935&app=live&stream="
+  name: "立臻客流统计项目"
