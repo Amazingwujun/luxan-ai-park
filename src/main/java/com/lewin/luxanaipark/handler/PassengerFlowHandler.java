@@ -102,7 +102,7 @@ public class PassengerFlowHandler extends SimpleChannelInboundHandler<ByteBuf> {
                                 {"action":"get_person_count"}
                                 """;
                         ctx.writeAndFlush(Unpooled.wrappedBuffer(s.getBytes(StandardCharsets.UTF_8)));
-                    }, 0, 5, TimeUnit.SECONDS);
+                    }, 0, 500, TimeUnit.MILLISECONDS);
                 } else {
                     log.info("登入[{}]失败, 响应：{}", cameraInfo.key(), str);
                 }
