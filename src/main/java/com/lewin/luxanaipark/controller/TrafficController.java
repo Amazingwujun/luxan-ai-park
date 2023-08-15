@@ -18,6 +18,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/scene")
 public class TrafficController {
 

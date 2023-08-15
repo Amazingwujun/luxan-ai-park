@@ -35,6 +35,7 @@ public class TrafficJob implements Job {
             var s = """
                     {"action":"clear_person_count"}
                     """;
+            log.info("执行定时清空指令，目标地址[{}]", key);
             netClient.writeAndFlush(Unpooled.wrappedBuffer(s.getBytes(StandardCharsets.UTF_8)));
             var f = new CompletableFuture<Boolean>();
             FUTURE_TASK_MAP.put(key, f);
@@ -45,11 +46,9 @@ public class TrafficJob implements Job {
                 FUTURE_TASK_MAP.remove(key);
 
                 if (t != null) {
-                    if (t instanceof TimeoutException) {
-                        log.error("指令超时", t);
-                    }else {
-                        log.error(t.getMessage(), t);
-                    }
+                    log.error("出现异常，断开连接: "+t.getMessage(), t);
+
+                    netClient.close();
                 }
             });
         }

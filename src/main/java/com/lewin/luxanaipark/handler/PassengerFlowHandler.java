@@ -152,6 +152,12 @@ public class PassengerFlowHandler extends SimpleChannelInboundHandler<ByteBuf> {
         }
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.error(cause.getMessage(), cause);
+        ctx.close();
+    }
+
     /**
      * 心跳、握手事件处理
      *
@@ -163,6 +169,8 @@ public class PassengerFlowHandler extends SimpleChannelInboundHandler<ByteBuf> {
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         String host = socketAddress.getAddress().getHostAddress();
         int port = socketAddress.getPort();
+
+        log.info("用户定义事件触发: {}", evt);
 
         if (evt instanceof IdleStateEvent ise) {
             if (IdleState.ALL_IDLE.equals(ise.state())) {

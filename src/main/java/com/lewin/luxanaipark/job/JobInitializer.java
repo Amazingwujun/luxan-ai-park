@@ -6,7 +6,9 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.stereotype.Component;
 
-/** 定时任务自动化配置
+/**
+ * 定时任务自动化配置
+ *
  * @author Jun
  * @since 1.0.0
  */
@@ -17,11 +19,12 @@ public class JobInitializer {
     public JobInitializer(BizProperties bizProperties) {
         var cronJobList = bizProperties.getCronJobList();
         var factory = new StdSchedulerFactory();
-        var jb = JobBuilder.newJob(TrafficJob.class)
-                .withIdentity(UUIDUtils.random())
-                .build();
 
         for (var cron : cronJobList) {
+            var jb = JobBuilder.newJob(TrafficJob.class)
+                    .withIdentity(UUIDUtils.random())
+                    .build();
+
             var trigger = TriggerBuilder
                     .newTrigger()
                     .withIdentity(UUIDUtils.random())
