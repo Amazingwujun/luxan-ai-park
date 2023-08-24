@@ -13,5 +13,7 @@ public class Scene {
 
     private String name;
 
+    private Integer capacity;
+
     private List<CameraInfo> cameraInfoList;
 }
