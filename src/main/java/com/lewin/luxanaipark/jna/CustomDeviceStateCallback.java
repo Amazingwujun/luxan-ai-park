@@ -153,7 +153,7 @@ public class CustomDeviceStateCallback implements HCNetSDK.FCheckDevStateCallBac
                 }
 
                 if (lst.isEmpty()) {
-                    log.info("""
+                    log.debug("""
                             
                             -----------------------------------
                             设备[{}]状态 {}
@@ -169,7 +169,7 @@ public class CustomDeviceStateCallback implements HCNetSDK.FCheckDevStateCallBac
                         }
                         msg.append(item.toString()).append("\r\n");
                     }
-                    log.info(
+                    log.debug(
                             """
                             
                             -----------------------------------

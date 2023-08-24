@@ -59,6 +59,8 @@ public class CustomWarningCallback implements HCNetSDK.FMSGCallBack, Runnable {
                     var alarm = new HCNetSDK.NET_DVR_PDC_ALRAM_INFO();
                     pointer2Structure(pAlarmInfo, alarm);
 
+                    log.info("模式[{}] 进[{}] 出[{}]", alarm.byMode == 0 ? "实时" : "周期", alarm.dwEnterNum, alarm.dwLeaveNum);
+
                     // 通过 deviceSn 找到 traffic
                     HCNetServiceImpl.HIK_TRAFFIC_INFO_MAP.values()
                             .stream()
@@ -66,12 +68,15 @@ public class CustomWarningCallback implements HCNetSDK.FMSGCallBack, Runnable {
                             .filter(t -> deviceSn.equals(t.t0().getSn()))
                             .findFirst()
                             .ifPresentOrElse(t -> {
+                                var preDwEnterNum = t.t1().getIn();
+                                var preDwLeaveNum = t.t1().getOut();
+                                if (preDwEnterNum < alarm.dwEnterNum && preDwLeaveNum < alarm.dwLeaveNum) {
+                                    return;
+                                }
                                 t.t1().setIn(alarm.dwEnterNum).setOut(alarm.dwLeaveNum);
                             }, () -> {
                                 log.error("deviceSn[{}] 无法关联到 HCNetServiceImpl.HIK_TRAFFIC_INFO_MAP", deviceSn);
                             });
-
-                    log.info("进[{}] 出[{}]", alarm.dwEnterNum, alarm.dwLeaveNum);
                 } else {
                     log.warn("设备[{}]事件[{}]被忽略", deviceSn, Integer.toHexString(command));
                 }

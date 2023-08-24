@@ -111,13 +111,12 @@ public class SceneServiceImpl implements ISceneService {
         var key = String.format("%s:%s", params.getIp(), params.getPort());
 
         // 通过 key 检查设备类型
-        var present = HCNetServiceImpl.HIK_TRAFFIC_INFO_MAP.values()
+        var tuple2 = HCNetServiceImpl.HIK_TRAFFIC_INFO_MAP.values()
                 .stream()
                 .flatMap(Collection::stream)
-                .map(Tuple2::t0)
-                .map(CameraInfo::key)
-                .anyMatch(t -> t.equals(key));
-        if (present) {
+                .filter(t -> t.t0().key().equals(key))
+                .findFirst();
+        if (tuple2.isPresent()) {
             // 检查设备是否在线
             if (!CustomDeviceStateCallback.DEVICE_ONLINE_MAP.containsKey(key)) {
                 return LewinResult.fail(CommonResponseCode.EXECUTION_ERR, "设备离线，无法执行指令");
@@ -130,6 +129,10 @@ public class SceneServiceImpl implements ISceneService {
             }
 
             if (resetCount(userId)) {
+                // 数据清零
+                var traffic = tuple2.get().t1();
+                traffic.clear();
+
                 return LewinResult.ok();
             }
             return LewinResult.fail(CommonResponseCode.EXECUTION_ERR, "客流数据清理失败!");
