@@ -6,13 +6,11 @@ import com.lewin.commons.entity.Tuples;
 import com.lewin.commons.utils.JSON;
 import com.lewin.luxanaipark.entity.CameraInfo;
 import com.lewin.luxanaipark.entity.Traffic;
-import com.lewin.luxanaipark.job.JobInitializer;
 import com.lewin.luxanaipark.job.TrafficJob;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.ssl.SslHandshakeCompletionEvent;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class PassengerFlowHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
-    public static final Map<String, List<Tuple2<CameraInfo, Traffic>>> TRAFFIC_INFO_MAP = new ConcurrentHashMap<>();
+    public static final Map<String, List<Tuple2<CameraInfo, Traffic>>> DEEPCAM_TRAFFIC_INFO_MAP = new ConcurrentHashMap<>();
     private final CameraInfo cameraInfo;
     private final String sceneName;
 
@@ -43,15 +41,15 @@ public class PassengerFlowHandler extends SimpleChannelInboundHandler<ByteBuf> {
         this.sceneName = sceneName;
         this.cameraInfo = cameraInfo;
 
-        var flag = false;
-        List<Tuple2<CameraInfo, Traffic>> list = TRAFFIC_INFO_MAP.computeIfAbsent(sceneName, k -> new ArrayList<>());
+        var alreadyExistFlag = false;
+        List<Tuple2<CameraInfo, Traffic>> list = DEEPCAM_TRAFFIC_INFO_MAP.computeIfAbsent(sceneName, k -> new ArrayList<>());
         for (Tuple2<CameraInfo, Traffic> tuple2 : list) {
             if (cameraInfo == tuple2.t0()) {
-                flag = true;
+                alreadyExistFlag = true;
                 break;
             }
         }
-        if (!flag) {
+        if (!alreadyExistFlag) {
             list.add(Tuples.of(cameraInfo, new Traffic().setIn(0).setOut(0)));
         }
     }
@@ -117,7 +115,7 @@ public class PassengerFlowHandler extends SimpleChannelInboundHandler<ByteBuf> {
                     return;
                 }
 
-                var list = TRAFFIC_INFO_MAP.get(sceneName);
+                var list = DEEPCAM_TRAFFIC_INFO_MAP.get(sceneName);
                 var hasElement = false;
                 for (var tuple2 : list) {
                     if (tuple2.t0().equals(this.cameraInfo)) {

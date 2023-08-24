@@ -2,6 +2,7 @@ package com.lewin.luxanaipark.camera;
 
 import com.lewin.commons.exception.LewinException;
 import com.lewin.luxanaipark.config.BizProperties;
+import com.lewin.luxanaipark.constants.CameraTypeEnum;
 import com.lewin.luxanaipark.entity.CameraInfo;
 import com.lewin.luxanaipark.entity.Scene;
 import com.lewin.luxanaipark.handler.PassengerFlowHandler;
@@ -59,6 +60,10 @@ public class PassengerFlowInitializer {
             }
 
             for (var cameraInfo : cameraInfoList) {
+                if (CameraTypeEnum.deepcam != cameraInfo.getType()) {
+                    continue;
+                }
+
                 var netClient = new NetClient(ch -> {
                     var p = ch.pipeline();
                     p.addLast(new IdleStateHandler(0,0,15));

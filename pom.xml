@@ -13,10 +13,19 @@
     <name>luxan-ai-park</name>
     <description>luxan-ai-park</description>
 
+    <properties>
+        <jna.version>5.13.0</jna.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.lewin</groupId>
             <artifactId>net</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
 
         <dependency>
@@ -27,6 +36,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
         </dependency>
 
         <dependency>

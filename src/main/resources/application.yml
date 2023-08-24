@@ -14,13 +14,17 @@ lewin:
     scene-list:
       - name: "南部厂餐厅"
         camera-info-list:
-          - name: "first"
+          - name: "神目"
             ip: 192.168.32.43
             location: "东门：进"
-          - name: "for-test"
-            ip: 192.168.32.148
-            location: "海创"
+            type: deepcam
+          - name: "海康"
+            ip: 192.168.32.184
+            port: 8000
+            uname: "admin"
+            passwd: "1qaz!QAZ"
+            type: hik
     cron-job-list:
       - "* 0 10 * * ?"
-    stream-url-prefix: "http://192.168.32.253:8080/live?port=1935&app=live&stream="
+    stream-url-prefix: "http://192.168.32.253:8988?src="
   name: "立臻客流统计项目"
